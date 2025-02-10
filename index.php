@@ -1,9 +1,17 @@
 <?php
 include 'db.php';
 
+// Add a new task
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['task'])) {
     $task = $_POST['task'];
     $sql = "INSERT INTO tasks (task) VALUES ('$task')";
+    $conn->query($sql);
+}
+
+// Delete a task
+if (isset($_GET['delete'])) {
+    $id = $_GET['delete'];
+    $sql = "DELETE FROM tasks WHERE id=$id";
     $conn->query($sql);
 }
 
@@ -23,7 +31,10 @@ $result = $conn->query("SELECT * FROM tasks");
     </form>
     <ul>
         <?php while ($row = $result->fetch_assoc()): ?>
-            <li><?php echo $row['task']; ?></li>
+            <li>
+                <?php echo $row['task']; ?>
+                <a href="?delete=<?php echo $row['id']; ?>">Delete</a>
+            </li>
         <?php endwhile; ?>
     </ul>
 </body>
